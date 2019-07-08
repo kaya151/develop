@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuomi.develop.dao.ManualAssMapper" >
+  <resultMap id="BaseResultMap" type="com.tuomi.develop.entity.ManualAss" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="product" property="product" jdbcType="VARCHAR" />
+    <result column="describe" property="describe" jdbcType="VARCHAR" />
+    <result column="file" property="file" jdbcType="VARCHAR" />
+    <result column="is_file" property="isFile" jdbcType="INTEGER" />
+    <result column="reply" property="reply" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, product, `describe`, file, is_file, reply, status, user_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from manual_ass
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from manual_ass
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tuomi.develop.entity.ManualAss" >
+    insert into manual_ass (id, product, `describe`,
+      file, is_file, reply, 
+      status, user_id)
+    values (#{id,jdbcType=INTEGER}, #{product,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR}, 
+      #{file,jdbcType=VARCHAR}, #{isFile,jdbcType=INTEGER}, #{reply,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tuomi.develop.entity.ManualAss" >
+    insert into manual_ass
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="product != null" >
+        product,
+      </if>
+      <if test="describe != null" >
+        `describe`,
+      </if>
+      <if test="file != null" >
+        file,
+      </if>
+      <if test="isFile != null" >
+        is_file,
+      </if>
+      <if test="reply != null" >
+        reply,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="product != null" >
+        #{product,jdbcType=VARCHAR},
+      </if>
+      <if test="describe != null" >
+        #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="file != null" >
+        #{file,jdbcType=VARCHAR},
+      </if>
+      <if test="isFile != null" >
+        #{isFile,jdbcType=INTEGER},
+      </if>
+      <if test="reply != null" >
+        #{reply,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tuomi.develop.entity.ManualAss" >
+    update manual_ass
+    <set >
+      <if test="product != null" >
+        product = #{product,jdbcType=VARCHAR},
+      </if>
+      <if test="describe != null" >
+        `describe` = #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="file != null" >
+        file = #{file,jdbcType=VARCHAR},
+      </if>
+      <if test="isFile != null" >
+        is_file = #{isFile,jdbcType=INTEGER},
+      </if>
+      <if test="reply != null" >
+        reply = #{reply,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tuomi.develop.entity.ManualAss" >
+    update manual_ass
+    set product = #{product,jdbcType=VARCHAR},
+      `describe` = #{describe,jdbcType=VARCHAR},
+      file = #{file,jdbcType=VARCHAR},
+      is_file = #{isFile,jdbcType=INTEGER},
+      reply = #{reply,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectManualByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select * from manual_ass where user_id = #{userId}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap"  >
+    select * from manual_ass
+  </select>
+
+  <select id="selectNoResp" resultMap="BaseResultMap"  >
+    select * from manual_ass where status = 0
+  </select>
+
+  <select id="selectResp" resultMap="BaseResultMap"  >
+    select * from manual_ass where status = 1
+  </select>
+</mapper>

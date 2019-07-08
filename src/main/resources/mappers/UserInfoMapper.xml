@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuomi.develop.dao.UserInfoMapper">
+	<resultMap type="com.tuomi.develop.entity.UserInfo" id="UserInfoMap">
+		<id property="id" column="id" jdbcType="BIGINT"/>
+		<result property="tel" column="tel" jdbcType="VARCHAR"/>
+		<result property="state" column="state" jdbcType="VARCHAR"/>
+		<association property="imWeChatId" javaType="com.tuomi.develop.entity.Im">
+			<id property="id" column="id" jdbcType="BIGINT"/>
+			<result property="openId" column="open_id" jdbcType="VARCHAR"/>
+			<result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+			<result property="token" column="token" jdbcType="VARCHAR"/>
+			<result property="headImg" column="head_img" jdbcType="VARCHAR"/>
+			<result property="types" column="types" jdbcType="VARCHAR"/>
+		</association>
+		<association property="imQqId" javaType="com.tuomi.develop.entity.Im">
+			<id property="id" column="id" jdbcType="BIGINT"/>
+			<result property="openId" column="open_id" jdbcType="VARCHAR"/>
+			<result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+			<result property="token" column="token" jdbcType="VARCHAR"/>
+			<result property="headImg" column="head_img" jdbcType="VARCHAR"/>
+			<result property="types" column="types" jdbcType="VARCHAR"/>
+		</association>
+	</resultMap>
+	<resultMap type="com.tuomi.develop.entity.UserInfo" id="UserInfoWeChatMap">
+		<id property="id" column="id" jdbcType="BIGINT"/>
+		<result property="tel" column="tel" jdbcType="VARCHAR"/>
+		<result property="state" column="state" jdbcType="VARCHAR"/>
+		<association property="imWeChatId" javaType="com.tuomi.develop.entity.Im">
+			<id property="id" column="id" jdbcType="BIGINT"/>
+			<result property="openId" column="open_id" jdbcType="VARCHAR"/>
+			<result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+			<result property="token" column="token" jdbcType="VARCHAR"/>
+			<result property="headImg" column="head_img" jdbcType="VARCHAR"/>
+			<result property="types" column="types" jdbcType="VARCHAR"/>
+		</association>
+	</resultMap>
+	<select id="getUserById" resultMap="UserInfoWeChatMap">
+		select u.*,i.* 
+		from userinfo u
+		left join  im i on u.im_wechat_id=i.id
+		left join  im m on u.im_qq_id=m.id
+		<where>
+			u.id=#{id}
+		</where>
+	</select>
+	<select id="findUserByWeChatId" resultMap="UserInfoWeChatMap">
+		select u.*,i.* 
+		from userinfo u
+		left join  im i on u.im_wechat_id=i.id
+		left join  im m on u.im_qq_id=m.id
+		<where>
+			im_wechat_id=#{wechatId}
+		</where>
+	</select>
+	<select id="findUserByQQId" resultMap="UserInfoMap">
+		select u.*,m.* 
+		from userinfo u
+		left join  im i on u.im_wechat_id=i.id
+		left join  im m on u.im_qq_id=m.id
+		<where>
+			im_qq_id=#{QQId}
+		</where>
+	</select>
+	<select id="findUserByOpenId" resultMap="UserInfoMap">
+		select u.*,i.*
+		from userinfo u
+		left join  im i on u.im_wechat_id=i.id
+		left join  im m on u.im_qq_id=m.id
+		where i.open_id=#{openId}
+	</select>
+	<select id="findUserById" resultMap="UserInfoMap">
+		select u.*,i.*
+		from userinfo u
+		left join  im i on u.im_wechat_id=i.id
+		left join  im m on u.im_qq_id=m.id
+	<where>
+		u.id=#{id}
+	</where>
+	</select>
+	<update id="edit">
+		update userinfo 
+		<set>
+			<if test="tel!=null and tel!=''">
+				tel=#{tel}
+			</if>
+		</set>
+		<where>
+			id=#{id}
+		</where>
+	</update>
+	<insert id="save" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+		insert into userinfo(tel,im_wechat_id,im_qq_id,state)
+		values(#{tel},#{imWeChatId.id},#{imQqId.id},#{state})
+	</insert>
+
+</mapper>

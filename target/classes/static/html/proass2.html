@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>树组件</title>
+  <link rel="stylesheet" href="../layui/css/layui.css">
+<script type="text/javascript" src="../layui/layui.js" charset="utf-8"></script>
+<style type="text/css">
+.layui-table-cell{
+	height:50%;
+	width:50%;
+}
+</style>
+</head>
+<body>
+<div class="demoTable" style="margin-top: 20px;">
+  <button class="layui-btn" data-type="add">添加</button>
+</div>
+<table class="layui-hide" id="test1" lay-filter="demo"></table>
+<div id="fdiv" style="display: none;">
+	<form action="" class="layui-form" id="fForm">
+		<input type="hidden" name="id" class="eid">
+		<div class="layui-form-item">
+		    <label class="layui-form-label">产品名称</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="product" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input ename">
+		    </div>
+		 </div>
+		 <div class="layui-form-item">
+		    <label class="layui-form-label">价格</label>
+		    <div class="layui-input-block">
+		      <input type="text" name="price" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input eprice">
+		    </div>
+		 </div>
+		 <!-- <div class="layui-form-item">
+		    <label class="layui-form-label">文件名</label>
+		    <div class="layui-input-block">
+		       <input type="file" name="file" required  lay-verify="required" placeholder="请输入文件名" autocomplete="off" class="layui-input efile">
+		    </div>
+		 </div> -->
+		 <div class="layui-form-item">
+		    <label class="layui-form-label">父级标题</label>
+		    <div class="layui-input-block ecategory" >
+		      <select name="fatherId"   id="categpryId">
+		        <option value=""></option>
+		        
+		      </select>
+		    </div>
+		  </div>
+		 <label class="layui-form-label">图片</label>
+		    <div class="layui-input-inline uploadHeadImage">
+		        <div class="layui-upload-drag" id="headImg">
+		            <i class="layui-icon"></i>
+		            <p>点击上传图片，或将图片拖拽到此处</p>
+		        </div>
+		    </div>
+		    <div class="layui-input-inline">
+		        <div class="layui-upload-list">
+		            <img class="layui-upload-img headImage" name="file" src="http://t.cn/RCzsdCq" id="demo1" style="width:60%;height: 60%;">
+		            <p id="demoText"></p>
+		        </div>
+		    </div>
+		  <div class="layui-form-item">
+		    <div class="layui-input-block">
+		      <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+		      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+		    </div>
+		  </div>
+	</form>
+</div>
+</body>
+<script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script>
+layui.use(['table','form','layer','upload','element'], function(){
+	  var table = layui.table;
+	  var form=layui.form;
+	  var layer=layui.layer;
+	  var $=layui.jquery;
+	  var upload=layui.upload;
+	  var element=layui.element;
+	  var winindex;
+	  var imgStr;
+	  var render=function(){
+		  table.render({
+			    elem: '#test1'
+			    ,url:'/develop/getPopularizeProAll'
+			    ,cellMinWidth: 80 
+			    ,cols: [[
+			      {field:'id',  title: 'ID', sort: true,width:"10%",unresize:true}
+			      ,{field:'product',  title: '产品名称',width:"20%",unresize:true}
+			      ,{field:'price',  title: '价格',width:"10%",unresize:true}
+			      ,{field:'fatherId',  title: '父级标题',width:"10%",unresize:true,templet:function(d){
+			    	  var title="";
+			    	  $.ajax({
+			        	  url:'/develop/getPopularizeAssById?id='+d.fatherId,
+			        	  type:"get",
+			        	  async:false,
+				          success: function (res) {
+							title=res.product;
+				          }
+			          });
+			    	  return title;
+			    	  
+			      }}
+			      ,{field:'img',  title: '图片', sort: true,width:"20%",unresize:true,templet:function(d){
+			    	  return "<img alt='' src='"+d.img+"'>"
+			      }}
+			      ,{field:'weath',  title: '操作',width:"30%",unresize:true,toolbar: '#barDemo'}
+			      
+			    ]]
+			    ,page: true
+			    ,loading:true
+			  });
+	  }
+	  render();
+	//拖拽上传
+      var uploadInst = upload.render({
+          elem: '#headImg'
+          , url: '/develop/upload/headImg'
+          , size: 500
+          , before: function (obj) {
+              //预读本地文件示例，不支持ie8
+              console.log(obj);
+              obj.preview(function (index, file, result) {
+            	  //console.log(result);
+            	  //console.log(file);
+            	  imgStr=file.name;
+                  $('#demo1').attr('src', result); //图片链接（base64）
+              });
+          }
+          , done: function (res) {
+        	  console.log(res);
+        	  //imgStr=res.data.src;
+        	  //$('#demo1').attr('src', res.data.src);
+              //如果上传失败
+              if (res.code > 0) {
+                  return layer.msg('上传失败');
+              }
+              var demoText = $('#demoText');
+              demoText.html('<span style="color: #8f8f8f;">上传成功!!!</span>');
+          }
+          , error: function () {
+              //演示失败状态，并实现重传
+              var demoText = $('#demoText');
+              demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+              demoText.find('.demo-reload').on('click', function () {
+                  uploadInst.upload();
+              });
+          }
+      });
+	  form.on('submit(formDemo)', function(data){
+		  //console.log(uploadInst.data);
+		  console.log(imgStr)
+		  //console.log($('#demo1').attr('src'))
+	        $.ajax({
+	        	url:'/develop/PopularizeProSaveOrEdit',
+	        	data:{
+	        		id:data.field.id,
+	        		product:data.field.product,
+	        		price:data.field.price,
+	        		fatherId:data.field.fatherId,
+	        		img:imgStr
+	        	},
+	        	success: function (res) {
+	        		if(res){
+	        			console.debug("操作成功");
+	        			render();
+	        			layer.close(winindex);
+	        		}else{
+	        			layer.msg("操作失败");
+	        			layer.close(winindex);
+	        		}
+	        	}
+	        });
+	        return false;
+	  });
+	//监听工具条
+	  table.on('tool(demo)', function(obj){
+	    var data = obj.data;
+	    
+	    if(obj.event === 'detail'){
+	      layer.msg('ID：'+ data.id + ' 的查看操作');
+	    } else if(obj.event === 'del'){
+	      layer.confirm('真的删除行么', function(index){
+	        
+	        $.ajax({
+	        	url:'/develop/PopularizeProDel',
+	        	data:{
+	        		id:data.id
+	        	},
+	        	success: function (res) {
+	        		if(res){
+	        			console.debug("操作成功");
+	        			layer.close(index);
+	        			render();
+	        		}else{
+	        			layer.msg("操作失败");
+	        			layer.close(index);
+	        		}
+	        	}
+	        });
+	        //layer.close(index);
+	      });
+	    } else if(obj.event === 'edit'){
+	      //layer.alert('编辑行：<br>'+ JSON.stringify(data))
+	      //弹出框
+	    	winindex=layer.open({
+	    		  title:"编辑",
+	    		  type: 1, 
+	    		  area: ['100%', '100%'],
+	    		  content: $("#fdiv") 
+	    	});
+	      //回显数据
+	      $(".eid").val(data.id);
+	      $(".ename").val(data.product);
+	      $(".eprice").val(data.price);
+	      console.log(data);
+	      $("#demo1").attr("src",data.img);
+	      $.ajax({
+        	  url:'/develop/getPopularizeAssList',
+        	  type:"get",
+        	  async:false,
+	          success: function (res) {
+	        	  var op="<option value=''>请选择</option>";
+				  for(var i=0;i<res.length;i++){
+					  op+="<option value='"+res[i].id+"'>"+res[i].product+"</option>";
+				  }
+				  $("#categpryId").html(op);
+				  form.render();
+	          }
+          })
+          $(".ecategory select").val(data.fatherId);
+          form.render();
+	    }
+	    
+	  });
+	  var active = {
+			   add:function(){
+				   $("#fForm")[0].reset();
+				   $(".eid").val("");
+				   $("#demo1").attr("src","http://t.cn/RCzsdCq");
+				   form.render();
+				   winindex=layer.open({
+			    		  title:"编辑",
+			    		  type: 1, 
+			    		  area: ['100%', '100%'],
+			    		  content: $("#fdiv") 
+			    	}); 
+				   $.ajax({
+			        	  url:'/develop/getPopularizeAssList',
+			        	  type:"get",
+			        	  async:false,
+				          success: function (res) {
+				        	  var op="<option value=''>请选择</option>";
+							  for(var i=0;i<res.length;i++){
+								  op+="<option value='"+res[i].id+"'>"+res[i].product+"</option>";
+							  }
+							  $("#categpryId").html(op);
+							  form.render();
+				          }
+			          })
+			   }  
+		  };
+		  $('.demoTable .layui-btn').on('click', function(){
+			    var type = $(this).data('type');
+			    active[type] ? active[type].call(this) : '';
+		   });
+	
+});
+</script>
+</html>

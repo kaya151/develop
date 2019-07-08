@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>带摇晃特效的扁平风格登录注册表单界面</title>
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+</head>
+<body>
+<div id="wrapper" class="login-page">
+    <div id="login_form" class="form">
+        <div id="login-regist">
+            <form class="register-form">
+                <input type="text" placeholder="用户名" value="" id="r_user_name"/>
+                <input type="password" placeholder="密码" value="" id="r_password"/>
+                <!--<input type="text" placeholder="电话" id="r_tel"/>-->
+            <button type="button"  @click="regist" id="create">创建账户</button>
+                <p class="message">已经有了一个账户? <a href="#">立刻登录</a></p>
+            </form>
+        </div>
+        <div id="login-login">
+            <form class="login-form">
+                <h2>管理登录</h2>
+                <input type="text" placeholder="用户名" name="username"  id="user_name"/>
+                <input type="password" placeholder="密码" name="password"  id="password"/>
+                <button type="button" @click="login" id="login">登　录</button>
+                <p class="message">还没有账户? <a href="#">立刻创建</a></p>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/vue.js"></script>
+<script type="text/javascript">
+
+    var vm = new Vue({
+        el: '#login-login',
+        data: {
+            user:null
+        },
+        methods: {
+            login: function () {
+                $.ajax({
+                    url: '/adminLogin',
+                    data:{
+                      'username':$("#user_name").val(),
+                      'password':$("#password").val(),
+                    },
+                    type: "post",
+                    dataType: "json",
+                    success: function (res) {
+                        alert("登陆成功！");
+                        window.location.href = "index.html";
+                    },
+                    error: function (err) {
+                        console.log("登陆失败" + err.toString());
+                        $("#login_form").removeClass('shake_effect');
+                        setTimeout(function () {
+                            $("#login_form").addClass('shake_effect')
+                        }, 1);
+                    }
+                })
+            }
+        }
+    });
+
+    var vr = new Vue({
+        el: '#login-regist',
+        data: {
+            register:{username:"",password:""}
+        },
+        methods: {
+            regist: function () {
+                if ($("#r_user_name").val()==""||$("#r_password").val()==""){
+                    $("#login_form").removeClass('shake_effect');
+                    setTimeout(function () {
+                        $("#login_form").addClass('shake_effect')
+                    }, 1);
+                }else{
+                    $.ajax({
+                        url: '/adminRegist',
+                        data:{
+                            'username':$("#r_user_name").val(),
+                            'password':$("#r_password").val(),
+                        },
+                        type: "post",
+                        dataType: "json",
+                        success: function (res) {
+                            alert(res);
+                        },
+                        error: function (err) {
+                            console.log("注册失败" + err);
+                        }
+                    })
+                }
+            }
+        }
+    });
+
+    // function check_login()
+    // {
+    //     var name=$("#user_name").val();
+    //     var pass=$("#password").val();
+    //     if(name=="admin" && pass=="admin")
+    //     {
+    //         alert("登录成功！");
+    //         $("#user_name").val("");
+    //         $("#password").val("");
+    //         $(location).attr('href', 'index.html');
+    //     }
+    //     else
+    //     {
+    //         $("#login_form").removeClass('shake_effect');
+    //         setTimeout(function()
+    //         {
+    //             $("#login_form").addClass('shake_effect')
+    //         },1);
+    //     }
+    // }
+    //
+    // function check_register() {
+    //     var name = $("#r_user_name").val();
+    //     var pass = $("#r_password").val();
+    //     // var email = $("r_tel").val();
+    //     if (name == "" || pass == "") {
+    //         $("#login_form").removeClass('shake_effect');
+    //         setTimeout(function () {
+    //             $("#login_form").addClass('shake_effect')
+    //         }, 1);
+    //     }
+    // }
+    //
+    $(function () {
+        $("#create").click(function () {
+            //check_register();
+            return false;
+        })
+        $("#login").click(function () {
+            //check_login();
+            return false;
+        })
+        $('.message a').click(function () {
+            $('form').animate({
+                height: 'toggle',
+                opacity: 'toggle'
+            }, 'slow');
+        });
+    })
+</script>
+</body>
+</html>

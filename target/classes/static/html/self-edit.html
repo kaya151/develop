@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-L-admin1.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/xadmin.css">
+    <script src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/xadmin.js"></script>
+    <!--<script type="text/javascript" src="../lib/layui/layui.js" charset="utf-8"></script>-->
+    <!--<script type="text/javascript" src="../js/xadmin.js"></script>-->
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="layui-anim layui-anim-up">
+<div class="x-nav">
+          <span class="layui-breadcrumb">
+            <a href="self-list.html">首页</a>
+          </span>
+    <a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:38px">ဂ</i></a>
+</div>
+<div class="x-body" id="home">
+    <form class="layui-form" id="manualAss">
+        <div class="layui-form-item">
+            <label for="L_email" class="layui-form-label">
+                产品名称
+            </label>
+            <div class="layui-input-inline">
+                <input name="id" :value="manual.id" type="hidden"/>
+                <input name="userId" :value="manual.userId" type="hidden"/>
+                <input name="isFile" :value="manual.isFile" type="hidden"/>
+                <input type="text" id="L_email" name="product" readonly="readonly" autocomplete="off"
+                       :value="manual.product" class="layui-input" style="width: 400px">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red"></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                需求描述
+            </label>
+            <div class="layui-input-inline" style="width: 400px">
+                <!--<textarea name="desc" id="L_username" placeholder="请输入内容" class="layui-textarea"></textarea>-->
+                <textarea name="describe" id="L_username" :value="manual.describe" readonly="readonly"
+                          class="layui-textarea" style="width: 400px"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="L_pass" class="layui-form-label">
+                文件
+            </label>
+            <div class="layui-input-inline">
+                <img :src="manual.file" id="L_pass" name="file1" alt="无图或图片加载失败！" style="width: 400px;height: 200px;">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="L_repass" class="layui-form-label">
+                评估回复
+            </label>
+            <div class="layui-input-inline">
+                <textarea name="reply" id="L_repass" placeholder="请输入内容" :value="manual.reply" class="layui-textarea"
+                          style="width: 400px"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="L_repass" class="layui-form-label">
+            </label>
+            <button class="layui-btn" type="button" @click="reply">
+                回复
+            </button>
+        </div>
+    </form>
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+
+    var mnaId = getUrlParam("id");
+
+    var vm = new Vue({
+        el: '#home',
+        data: {
+            manual: {}
+        },
+        created: function () {
+            $.ajax({
+                url: '/develop/selectManualById',
+                data: {
+                    'id': mnaId,
+                },
+                type: "post",
+                dataType: "json",
+                success: function (res) {
+                    vm.manual = res.data;
+                },
+                error: function (err) {
+                    console.log("发送失败" + err);
+                }
+            })
+        },
+        methods: {
+            reply: function () {
+                // var form = document.getElementById("#manualAss");
+                var formData = new FormData($("#manualAss")[0]);
+                $.ajax({
+                    url: '/develop/updateManualById',
+                    type: "post",
+                    data: formData,
+                    dataType: "json",
+                    processData: false,                // jQuery不要去处理发送的数据
+                    contentType: false,
+                    success: function (res) {
+                        alert(res.msg);
+                        window.location.href = "self-list.html";
+                    },
+                    error: function (err) {
+                        console.log("发送失败" + err.toString());
+                    }
+                })
+            },
+            // changeSize:function () {
+            //     document.getElementById("#manualAss");
+            // }
+        }
+    });
+
+
+
+
+    // layui.use(['form','layer'], function(){
+    //     $ = layui.jquery;
+    //   var form = layui.form
+    //   ,layer = layui.layer;
+    //
+    //   //自定义验证规则
+    //   form.verify({
+    //     nikename: function(value){
+    //       if(value.length < 5){
+    //         return '昵称至少得5个字符啊';
+    //       }
+    //     }
+    //     ,pass: [/(.+){6,12}$/, '密码必须6到12位']
+    //     ,repass: function(value){
+    //         if($('#L_pass').val()!=$('#L_repass').val()){
+    //             return '两次密码不一致';
+    //         }
+    //     }
+    //   });
+    //
+    //   //监听提交
+    //   form.on('submit(add)', function(data){
+    //     console.log(data);
+    //     //发异步，把数据提交给php
+    //     layer.alert("增加成功", {icon: 6},function () {
+    //         // 获得frame索引
+    //         var index = parent.layer.getFrameIndex(window.name);
+    //         //关闭当前frame
+    //         parent.layer.close(index);
+    //     });
+    //     return false;
+    //   });
+    //
+    //
+    // });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,70 @@
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 0
+}
+
+body {
+    margin: .28rem .16rem;
+    padding: 0
+}
+
+img {
+    max-width: 100%
+}
+
+header[data-v-4cb16c50] {
+    text-align: left;
+    font-size: .4rem;
+    color: #27292f;
+    line-height: .64rem;
+    font-family: PingFangSC-Semibold, sans-serif
+}
+
+.date[data-v-4cb16c50] {
+    text-align: left;
+    font-size: .32rem
+}
+
+p[data-v-4cb16c50] {
+    font-size: .373333rem;
+    color: #27292f;
+    text-align: left;
+    line-height: .586667rem;
+    font-family: PingFangSC-Regular, sans-serif
+}
+
+.pic[data-v-4cb16c50] {
+    width: 100%;
+    margin: .4rem 0
+}
+
+.pic > img[data-v-4cb16c50] {
+    max-width: 100%
+}
+
+p[data-v-4cb16c50] {
+    text-align: justify
+}
+
+img[data-v-4cb16c50] {
+    max-width: 100%
+}
+
+p[data-v-4cb16c50] {
+    width: 90%;
+    margin: auto
+}
+
+section[data-v-4cb16c50] {
+    width: 100% !important
+}
+
+.content img[data-v-4cb16c50] {
+    width: 100%
+}
+
+/*# sourceMappingURL=app.32a100f3a6d67ab929c5b993eb18a34e.css.map */

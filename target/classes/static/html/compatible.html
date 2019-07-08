@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<link rel="stylesheet" href="../layui/css/layui.css">
+<script type="text/javascript" src="../layui/layui.js" charset="utf-8"></script>
+</head>
+<body>
+<form class="layui-form layui-form-pane">
+  <div class="layui-form-item">
+      <label class="layui-form-label">选择</label>
+      <div class="layui-input-inline pp">
+       <select name="provid" id="pr1" lay-filter="p1">
+         <option value="">请选择</option>
+         <option value="1">asd</option>
+       </select> 
+      </div>
+      <div class="layui-input-inline" style="display: none;" id="n1">
+       <select name="provid" id="pr2" lay-filter="p2">
+         <option value="">请选择</option>
+       </select> 
+      </div>
+      <div class="layui-input-inline" style="display: none;" id="n2">
+       <select name="provid" id="pr3" lay-filter="p3">
+         <option value="">请选择</option>
+       </select> 
+      </div>
+      <div class="layui-input-inline" style="display: none;" id="n3">
+       <select name="provid" id="prs2" lay-filter="p4">
+         <option value="">请选择</option>
+       </select> 
+      </div>                      
+ </div>
+</form>
+<div style="display: none;" id="threeForm">
+	<form class="layui-form">
+	<input type="hidden" name="id" class="eid">
+	<div class="layui-form-item">
+	    <label class="layui-form-label">名称</label>
+	    <div class="layui-input-block">
+	      <input type="text" name="category"  autocomplete="off"  class="layui-input category">
+	    </div>
+  	</div>
+  	<div class="layui-form-item">
+	    <label class="layui-form-label">平均价格</label>
+	    <div class="layui-input-block">
+	      <input type="text" name="averagePrice"  autocomplete="off"  class="layui-input averagePrice">
+	    </div>
+  	</div>
+  	<div class="layui-form-item">
+	    <label class="layui-form-label">周期</label>
+	    <div class="layui-input-block">
+	      <input type="text" name="developmentTime"  autocomplete="off"  class="layui-input developmentTime" >
+	    </div>
+  	</div>
+  	<div class="layui-form-item">
+	    <label class="layui-form-label">同类竞品</label>
+	    <div class="layui-input-block">
+	      <input type="text" name="competingProducts"  autocomplete="off"  class="layui-input competingProducts">
+	    </div>
+  	</div>
+  	<div class="layui-form-item">
+	    <div class="layui-input-block">
+	      <button class="layui-btn" lay-submit lay-filter="demo1">立即提交</button>
+	      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+	    </div>
+  	</div>
+  	</form>
+</div>
+<script type="text/javascript">
+layui.use(['table','form','layer'], function(){
+	  var table = layui.table;
+	  var form=layui.form;
+	  var layer=layui.layer;
+	  var $=layui.jquery;
+	  $.ajax({
+		  type:"get",
+		  url:"/getAssAll",
+		  async: false,
+		  success:function(res){
+			  console.info(res);
+			  var op="<option value=''>请选择</option>";
+			  for(var i=0;i<res.length;i++){
+				  op+="<option value='"+res[i].id+"' vy='"+res[i].type+"'>"+res[i].product+"</option>";
+			  }
+			  console.info(op);
+			  $("#pr1").html(op);
+			  form.render();
+		  }
+	  });
+	  form.on("select(p1)",function(data){
+		  console.info($("pr1 option"));
+		  $("")
+		  if(data.value=="1"||data.value=="2"){
+			  $.ajax({
+				  type:"get",
+				  data:{
+					  fatherId: data.value
+				  },
+				  async: false,
+				  url:"/getTwoById",
+				  success:function(data){
+					  console.info(data);
+					  var op="<option value=''>请选择</option>";
+					  for(var i=0;i<data.length;i++){
+						  op+="<option value='"+data[i].id+"'>"+data[i].category+"</option>";
+					  }
+					  $("#pr2").html(op);
+					  form.render();
+					  $("#n1").css("display","block")
+					  $("#n2").css("display","block")
+					  $("#n3").css("display","none")
+				  }
+			  });
+		  }else{
+			  $.ajax({
+				  type:"get",
+				  data:{
+					  fid: data.value
+				  },
+				  async: false,
+				  url:"/getPrErId",
+				  success:function(data){
+					  console.info(data);
+					  var op="<option value=''>请选择</option>";
+					  for(var i=0;i<data.length;i++){
+						  op+="<option value='"+data[i].id+"'>"+data[i].category+"</option>";
+					  }
+					  $("#prs2").html(op);
+					  form.render();
+					  $("#n3").css("display","block")
+					  $("#n1").css("display","none")
+					  $("#n2").css("display","none")
+				  }
+			  });
+		  }
+		  return false;
+	  });
+	  form.on("select(p2)",function(data){
+		  console.info(data.value);
+		  var p1=$(".pp select").val();
+		  console.info(p1);
+		   $.ajax({
+			  type:"get",
+			  data:{
+				  fatherId: p1,
+				  twoId:data.value
+			  },
+			  async: false,
+			  url:"/getPrById",
+			  success:function(data){
+				  console.info(data);
+				  var op="<option value=''>请选择</option>";
+				  for(var i=0;i<data.length;i++){
+					  op+="<option value='"+data[i].id+"'>"+data[i].category+"</option>";
+				  }
+				  $("#pr3").html(op);
+				  form.render();
+			  }
+		  }); 
+		  return false;
+	  });
+	  form.on("select(p3)",function(data){
+		  console.info(data.value);
+		  $.ajax({
+			  type:"get",
+			  data:{
+				  id:data.value
+			  },
+			  async: false,
+			  url:"/findPrById",
+			  success:function(data){
+				  console.info(data);
+				  $(".eid").val(data.id);
+				  $(".category").val(data.category);
+				  $(".averagePrice").val(data.averagePrice);
+				  $(".developmentTime").val(data.developmentTime);
+				  $(".competingProducts").val(data.competingProducts);
+				  $("#threeForm").css("display","block");
+				  form.render();
+			  }
+		  });
+		   
+		  return false;
+	  });
+	  form.on("select(p4)",function(data){
+		  console.info(data.value);
+		  $.ajax({
+			  type:"get",
+			  data:{
+				  id:data.value
+			  },
+			  async: false,
+			  url:"/findPrById",
+			  success:function(data){
+				  console.info(data);
+				  $(".eid").val(data.id);
+				  $(".category").val(data.category);
+				  $(".averagePrice").val(data.averagePrice);
+				  $(".developmentTime").val(data.developmentTime);
+				  $(".competingProducts").val(data.competingProducts);
+				  $("#threeForm").css("display","block");
+				  form.render();
+			  }
+		  });
+		   
+		  return false;
+	  });
+	//监听提交
+	  form.on('submit(demo1)', function(data){
+	    console.info(data.field);
+	    var datas=data.field;
+	      $.ajax({
+			  type:"get",
+			  data:{
+				  id:datas.id,
+				  category:datas.category,
+				  averagePrice:datas.averagePrice,
+				  developmentTime:datas.developmentTime,
+				  competingProducts:datas.competingProducts
+			  },
+			  async: false,
+			  url:"/editPr",
+			  dataType : "json",
+			  success:function(res){
+				  console.info(data);
+				  if(res){
+					  layer.msg("操作成功");
+					  window.location.reload();
+				  }else{
+					  layer.msg("操作失败");
+				  }
+				  
+			  } 
+		  }); 
+	    return false;
+	  });
+	
+});
+</script>
+</body>
+</html>

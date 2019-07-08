@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuomi.develop.dao.RequestDevopsMapper" >
+  <resultMap id="BaseResultMap" type="com.tuomi.develop.entity.RequestDevops" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="activity_start" property="activityStart" jdbcType="INTEGER" />
+    <result column="activity_end" property="activityEnd" jdbcType="INTEGER" />
+    <result column="devops_cost" property="devopsCost" jdbcType="REAL" />
+    <result column="father_id" property="fatherId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, activity_start, activity_end, devops_cost, father_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from request_devops
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from request_devops
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tuomi.develop.entity.RequestDevops" >
+    insert into request_devops (id, activity_start, activity_end, 
+      devops_cost, father_id)
+    values (#{id,jdbcType=INTEGER}, #{activityStart,jdbcType=INTEGER}, #{activityEnd,jdbcType=INTEGER}, 
+      #{devopsCost,jdbcType=REAL}, #{fatherId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tuomi.develop.entity.RequestDevops" >
+    insert into request_devops
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="activityStart != null" >
+        activity_start,
+      </if>
+      <if test="activityEnd != null" >
+        activity_end,
+      </if>
+      <if test="devopsCost != null" >
+        devops_cost,
+      </if>
+      <if test="fatherId != null" >
+        father_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="activityStart != null" >
+        #{activityStart,jdbcType=INTEGER},
+      </if>
+      <if test="activityEnd != null" >
+        #{activityEnd,jdbcType=INTEGER},
+      </if>
+      <if test="devopsCost != null" >
+        #{devopsCost,jdbcType=REAL},
+      </if>
+      <if test="fatherId != null" >
+        #{fatherId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tuomi.develop.entity.RequestDevops" >
+    update request_devops
+    <set >
+      <if test="activityStart != null" >
+        activity_start = #{activityStart,jdbcType=INTEGER},
+      </if>
+      <if test="activityEnd != null" >
+        activity_end = #{activityEnd,jdbcType=INTEGER},
+      </if>
+      <if test="devopsCost != null" >
+        devops_cost = #{devopsCost,jdbcType=REAL},
+      </if>
+      <if test="fatherId != null" >
+        father_id = #{fatherId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tuomi.develop.entity.RequestDevops" >
+    update request_devops
+    set activity_start = #{activityStart,jdbcType=INTEGER},
+      activity_end = #{activityEnd,jdbcType=INTEGER},
+      devops_cost = #{devopsCost,jdbcType=REAL},
+      father_id = #{fatherId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByActivity" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select * from request_devops where #{number} &gt; activity_start and #{number} &lt;= activity_end
+  </select>
+</mapper>

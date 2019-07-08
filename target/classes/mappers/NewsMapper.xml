@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuomi.develop.dao.NewsMapper" >
+  <resultMap id="BaseResultMap" type="com.tuomi.develop.entity.News" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="news_title" property="newsTitle" jdbcType="VARCHAR" />
+    <result column="news_content" property="newsContent" jdbcType="VARCHAR" />
+    <result column="image_urls" property="imageUrls" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="VARCHAR" />
+    <result column="app_name" property="appName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, news_title, news_content, image_urls, create_date, app_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from news
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from news
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tuomi.develop.entity.News" >
+    insert into news (id, news_title, news_content, 
+      image_urls, create_date, app_name
+      )
+    values (#{id,jdbcType=INTEGER}, #{newsTitle,jdbcType=VARCHAR}, #{newsContent,jdbcType=VARCHAR}, 
+      #{imageUrls,jdbcType=VARCHAR}, #{createDate,jdbcType=VARCHAR}, #{appName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tuomi.develop.entity.News" >
+    insert into news
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="newsTitle != null" >
+        news_title,
+      </if>
+      <if test="newsContent != null" >
+        news_content,
+      </if>
+      <if test="imageUrls != null" >
+        image_urls,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="appName != null" >
+        app_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="newsTitle != null" >
+        #{newsTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="newsContent != null" >
+        #{newsContent,jdbcType=VARCHAR},
+      </if>
+      <if test="imageUrls != null" >
+        #{imageUrls,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="appName != null" >
+        #{appName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tuomi.develop.entity.News" >
+    update news
+    <set >
+      <if test="newsTitle != null" >
+        news_title = #{newsTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="newsContent != null" >
+        news_content = #{newsContent,jdbcType=VARCHAR},
+      </if>
+      <if test="imageUrls != null" >
+        image_urls = #{imageUrls,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="appName != null" >
+        app_name = #{appName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tuomi.develop.entity.News" >
+    update news
+    set news_title = #{newsTitle,jdbcType=VARCHAR},
+      news_content = #{newsContent,jdbcType=VARCHAR},
+      image_urls = #{imageUrls,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=VARCHAR},
+      app_name = #{appName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <delete id="deleteAll">
+    TRUNCATE news
+  </delete>
+
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select * from news
+  </select>
+
+</mapper>

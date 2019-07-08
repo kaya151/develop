@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: develop
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: PC
+Implementation-Vendor-Id: com.tuomi
+Build-Jdk: 1.8.0_211
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/develop
+Created-By: Maven Integration for Eclipse
+

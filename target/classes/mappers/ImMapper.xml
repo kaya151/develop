@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuomi.develop.dao.ImMapper">
+	<resultMap type="com.tuomi.develop.entity.Im" id="ImMap">
+		<id property="id" column="id" jdbcType="BIGINT"/>
+		<result property="openId" column="open_id" jdbcType="VARCHAR"/>
+		<result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+		<result property="token" column="token" jdbcType="VARCHAR"/>
+		<result property="headImg" column="head_img" jdbcType="VARCHAR"/>
+		<result property="types" column="types" jdbcType="VARCHAR"/>
+	</resultMap>
+	<select id="findImByOpenId" resultMap="ImMap">
+		select id,open_id,nick_name,token,head_img,types
+		from im
+		<where>
+			open_id=#{openId}
+		</where>
+	</select>
+	<insert id="save" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		im(open_id,nick_name,token,head_img,types)
+		values(#{openId},#{nickName},#{token},#{headImg},#{types})
+	</insert>
+	
+</mapper>
